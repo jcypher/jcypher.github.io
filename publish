@@ -1,1 +1,3 @@
-Sun 23 May 2021 21:44:06 CDT
+#!/usr/bin/env bash
+date > publish_date;git add .;git commit -m "published on $(date)";git push
+
