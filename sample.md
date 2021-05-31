@@ -9,4 +9,5 @@ permalink: /sample/
 ## list
 - a sample page
 - this is a list
+- third item
 
