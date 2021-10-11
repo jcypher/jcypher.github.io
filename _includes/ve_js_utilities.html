@@ -1,0 +1,88 @@
+<link rel="stylesheet" property="stylesheet" href="/assets/css/authors.css">
+<style>
+    div.tool {
+        display:block;
+        width:auto;
+        border: 1px dotted #ccc;
+        margin:1rem;
+        padding:1rem;
+        background: #efefef;
+    }
+    #aspect {
+        min-width:200px;
+        max-width:300px;
+    }
+    #aspect label {
+        display:inline-block;
+        width: 6rem;
+    }
+    #aspect textarea {
+        display: block;
+        width: 96%;
+        height: auto;
+        min-height: 0;
+        margin: 1rem auto;
+        background: rgba(0,0,0,0.05);
+        border:1px dotted rgba(0,0,0,0.025);
+        overflow:hidden;
+    }
+</style>
+<script>
+    // Credit: https://stackoverflow.com/a/53922757
+    function veFactors(num) {
+        let fac = [], i = 1, ind = 0;
+        while (i <= Math.floor(Math.sqrt(num))) {
+            //inserting new elements in the middle using splice
+            if (num % i === 0) {
+                fac.splice(ind, 0, i);
+                if (i != num / i) {
+                    fac.splice(-ind, 0, num / i);
+                }
+                ind++;
+            }
+            i++;
+        }
+        //swapping first and last elements
+        const temp = fac[fac.length - 1];
+        fac[fac.length - 1] = fac[0];
+        fac[0] = temp;
+
+        // nice sorted array of factors
+        return fac;
+    }
+    window.addEventListener("load",function(){
+        (function setupAspectTool(){
+            const elW = document.querySelector("#aspect input[name='width']");
+            const elH = document.querySelector("#aspect input[name='height']");
+            const elTA = document.querySelector("#aspect textarea");
+            function veElWHChange() {
+                const w = parseInt(elW.value);
+                const h = parseInt(elH.value);
+                if((w) && (h)) {
+                    const wFactors = veFactors(w);
+                    const hFactors = veFactors(h);
+                    const factors = wFactors.filter(function(val){return hFactors.includes(val);});
+                    elTA.textContent = "Aspect: (" + w + "," + h + ")\n\n";
+                    elTA.textContent += "Factors: " + factors.join(', ') + "\n\n";
+                    elTA.textContent += "Factored Aspects: \n";
+                    for (const n of factors) {
+                        elTA.textContent += "(" + (w / n) + "," + (h / n) + ")\n";
+                    }
+                    elTA.style.height = '0';
+                    elTA.style.height = elTA.scrollHeight + 'px';
+                }
+            }
+            elW.addEventListener("keyup", veElWHChange);
+            elH.addEventListener("keyup", veElWHChange);
+        })();
+    });
+</script>
+<div class="tool" id="aspect">
+    <h3>Factored Aspect Ratio Calculator</h3>
+    <p>Calculates valid aspect ratios that are whole-numbers.</p>
+    <label for="width">Width:</label>
+    <input name="width" type="number" placeholder="width" /><br>
+    <label for="height">Height:</label>
+    <input name="height" type="number" placeholder="height" />
+    <textarea placeholder="result" rows="1"></textarea>
+</div>
